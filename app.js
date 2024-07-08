@@ -1,35 +1,21 @@
-// console.log('Express Tutorial')
+const express = require('express')
+const path = require('path')
 
-const http = require('http');
-const {readFileSync} = require('fs')
+const app = express()
 
-const homepage = readFileSync('./index.html')
-const server = http.createServer((req, res) => {
-    console.log('user made request')
-    console.log(req.method)
-    console.log(req.url)
+// setup static and middleware
+app.use(express.static('./methods-public'))
 
+// app.get('/', (req, res) => {
+//   res.sendFile(path.resolve(__dirname, './navbar-app/index.html'))
+//   adding to static assets
+//   SSR
+// })
 
-    if(req.url === '/') {
-        // res.writeHead(200, {'content-type': 'text/html'})
-   res.writeHead(200, {'content-type': 'text/plain'})
-    res.write(homepage)
-        res.end()
-    }
-    //about page
-    else if(req.url === '/about') {
-        res.writeHead(200, {'content-type': 'text/html'})
-        res.write('<h1>Welcome to our about page</h1>')
-        res.end()
-    }
-    //404
-    else{
-        res.writeHead(404, {'content-type': 'text/html'})
-        res.write('<h1>Page not found</h1>')
-        res.end()
-    }
-   
-}
-)
+app.all('*', (req, res) => {
+  res.status(404).send('resource not found')
+})
 
-server.listen(5000)
+app.listen(5000, () => {
+  console.log('server is listening on port 5000....')
+})
